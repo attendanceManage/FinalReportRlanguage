@@ -1,0 +1,48 @@
+---
+title: "my"
+author: "Shireen Imran"
+date: "2022-10-19"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+df.edu_in_EST <- read.csv("ST005_20221019-231535.csv", header = TRUE, comment.char = "#")
+View(df.edu_in_EST)
+str(df.edu_in_EST)
+summary(df.edu_in_EST) 
+
+minyear = df.edu_in_EST$X2015
+maxyear = df.edu_in_EST$X2017
+quantile(minyear)
+quantile(maxyear)
+sd(minyear)
+sd(maxyear)
+
+str(df.edu_in_EST)
+
+
+plot(df.edu_in_EST)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

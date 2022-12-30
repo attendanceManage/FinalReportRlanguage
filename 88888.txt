@@ -1,0 +1,4 @@
+# Data cleaning and transformation web column
+# What was the central tendency of healthcare data breach by a year?
+# When was the worst year for an overall number of healthcare data breaches?
+#

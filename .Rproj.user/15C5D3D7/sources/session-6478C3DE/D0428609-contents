@@ -1,0 +1,71 @@
+library("dplyr")   
+library(ggplot2)
+
+##import data into R language
+data = read.csv("D:/DataAnalysisRProject/data_breaches_all_clean.csv")
+
+data$Breach.Submission.Date <- as.Date(data$Breach.Submission.Date, format = "%m/%d/%Y") 
+
+write.csv(data %>% filter(data$Breach.Submission.Date  < '2020-1-1' 
+                          & data$Covered.Entity.Type!="Business Associate"), 
+                          "D:/DataAnalysisRProject/data.csv", row.names=FALSE)
+
+##getting date from date between 2019 to 2009 not above than
+##2019 and we are analysis data only health department
+datafrom = read.csv("D:/DataAnalysisRProject/data.csv")
+
+
+
+#Which is biggest medium of data (hacking)
+# Create the function.
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+biggestMedium <- getmode(
+  datafrom$Location.of.Breached.Information)
+# biggest medium of data (hacking) 
+#answer Network Server
+print(biggestMedium)
+
+#How does it affect individuals
+
+GFG <- data.frame(
+  State         =   datafrom$State, 
+  Frequency= datafrom$Individuals.Affected
+
+)
+
+GFG %>% group_by(State)%>%
+ summarise(individual=mean(Frequency))%>%
+
+ ggplot(aes(x=State,fill=State,y=individual)) + 
+  geom_col(position = "dodge")+
+ labs(title="Affect individuals according state wise USA")
+
+
+#
+#How many times did each organisation get hacked
+Organization <- data.frame(
+       Name         = datafrom$Name.of.Covered.Entity, 
+       Date         = datafrom$Breach.Submission.Date
+)
+
+Organization %>% group_by(Name)%>%
+  summarise(date=mean(Date))%>%
+  
+  ggplot(aes(x=Name,fill=Name,y=date)) + 
+  geom_col(position = "dodge")+
+  labs(title="each organisation get hacked")
+
+#Organization %>% filter(Organization$Date  < '2020-1-1' )
+
+
+
+#How many times do data types lose / hack a particular organisation?
+
+
+
+
+  

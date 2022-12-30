@@ -1,0 +1,224 @@
+---
+title: " US Healthcare Data Breach Between Years 2009 and 2019"
+author: "Abimbola and Shireen"
+date: "2022-12-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Abstract
+Data breaches in the US healthcare industry have been a persistent problem over the past decade. Between 2009 and 2019, numerous healthcare organisations experienced data breaches, resulting in the unauthorised access or disclosure of sensitive patient information. These breaches have had serious consequences for both patients and healthcare organisations, including financial losses, damage to reputation, and loss of trust.
+
+T-test data analysis as a statistical technique was used to analyse the dataset, US healthcare data breaches between 2009 and 2019. It involved comparing the mean values of different variables in two groups of data to determine whether there is a significant difference between the groups.
+
+This project used the t-test data analysis to provide valuable insights into the characteristics and consequences of healthcare data breaches, relationship between variables, as well as correlation between features.
+
+
+## Introduction
+In this report, we are going to explore the dataset that has been titled ‘Biggest healthcare data breaches 2009-2019’ from the Privacy Affairs website which we have re-titled as `data` for this analysis. 
+
+Additional documentation can be found here:  
+< https://data.world/zendoll27/biggest-healthcare-data-breaches-2009-2019>  
+
+The dataset includes 9 variables and 2,641 observations:  
+- ‘Name.of.Covered.Entity’
+- ‘State’ 
+- `Covered.Entity.Type` 
+- `Individuals.Affected` 
+- `Breach.Submission.Date’ 
+- `Type.of.Breach’
+- ‘Location.of.Breached.Information’
+- 'Business.Associate.Present'
+- 'Web.Description'
+
+First, let’s activate the all packages needed to explore and analyse the dataset after cleaning it in excel and importing it into R.
+
+```{r, include=FALSE}
+library(tidyverse)
+library(stats)
+library("dplyr")
+library(ggplot2)
+library(patchwork)
+library(lubridate)
+```
+
+We import the data into R language
+```{r, include=FALSE}
+data = read.csv("D:\\DataAnalysisRProject\\data.csv")
+#data cleaning and removing two columns - Business.Associate.Present, Web.Description
+```
+
+## Performing EDA
+```{r , include=FALSE}
+str(data)
+```
+We will be performing descriptive statistics on the dataset.
+
+Calculate the mean of one category inside Individuals.Affected
+```{r, include=FALSE}
+mean(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident"])
+median(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" ])
+```
+
+Calculate the mean of two categories
+```{r, include=FALSE}
+mean(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+```
+
+Calculate the median
+```{r, include=FALSE}
+median(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+```
+
+Calculate the column sums
+```{r, include=FALSE}
+
+#colSums(Affected,na.rm=FALSE)
+```
+
+Calculate the maximum and munimum values
+```{r, include=FALSE}
+max(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+min(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+```
+
+Calculate the interquartile range
+```{r, include=FALSE}
+quantile(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+
+sd(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+
+var(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+```
+
+Calculate the mode by creating a mode function
+```{r, include=FALSE}
+mode = function(x){
+  ta = table(x)
+  tam = max(ta)
+  if(all(ta==tam))
+    mod = NA
+  else
+    if(is.numeric(x))
+      mod = as.numeric(names(ta)[ta==tam])
+  else
+    mod =names(ta)[ta==tam]
+  return(mod)
+}
+mode(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" & data$Location.of.Breached.Information=="Email"])
+```
+
+
+```{r, echo=FALSE}
+
+
+year = c(as.numeric(substring(data$Breach.Submission.Date,0,4)))
+
+```
+
+## Correlation Test
+```{r, echo=FALSE}
+cor.test(data$Individuals.Affected, year)
+```
+
+
+### Research questions 
+
+1. Correlation between year and individuals affected
+
+2. Which state has the highest occurrence and which has the lowest
+
+## Hypothesis Testing
+```{r, include=FALSE}
+mean(data$Individuals.Affected)
+t.test(data$Individuals.Affected[data$Type.of.Breach=="Hacking/IT Incident" ],mu =203093.1)
+str(data)
+
+
+data$Individuals.Affected <-as.numeric(data$Individuals.Affected)
+
+```
+
+```{r, echo=FALSE}
+
+
+ggplot(data=data,aes(y=data$Covered.Entity.Type,x=data$Individuals.Affected))+ geom_boxplot() +theme_classic()
+
+
+
+data$Individuals.Affected <-as.numeric(data$Individuals.Affected)
+
+
+ggplot(data, aes(x=State,y=Individuals.Affected))+geom_point()
+
+
+state<- data$State
+Individual.Affected <-data$Individuals.Affected
+Individual.Affected <-Individual.Affected / 1e2
+
+ggplot()+
+  geom_bar(aes(x=state,y=Individual.Affected), stat = "identity")
+
+ggplot()+
+  geom_bar(aes(x=state,y=Individual.Affected), stat = "identity")
+
+ggplot()+
+  geom_bar( aes(x= reorder(state, Individual.Affected),
+                 y=Individual.Affected),stat = "identity",fill="blue")+
+ggtitle("Largest State with Individual Attack")+ theme(plot.title = element_text(hjust = 0.5))+
+  coord_flip()
+
+
+
+ggplot(aes(x=data(Individuals.Affected))+
+           geom_bar(color = 'red'))+
+         labs(x="State",y=NULL)
+
+library(tidyverse)
+#filtering rows
+df_locate = filter(data,data$Location.of.Breached.Information=="Network Server")
+dim(df_locate)
+
+df_Email= filter(data,data$Location.of.Breached.Information=="Email")
+dim(df_Email)
+
+df_state =filter(data,data$State=="FL")
+#head(df_state)
+#dim(df_state)
+#df_state
+
+
+
+df_long = gather(data,Covered.Entity.Type,length,1:5)
+
+
+
+#df_sum <-data %>% group_by(data$State,data$Type.of.Breach)%>%
+#df_sum = group_by(df_long,data$State,data$Type.of.Breach)
+#head(df_sum)
+
+
+ggplot(data, aes(x=Type.of.Breach,y=Individuals.Affected,color=Location.of.Breached.Information))+
+  geom_point()
+
+
+ggplot(data=data,aes(x=Individuals.Affected))+
+  geom_bar(stat="count",position = position_dodge())+
+  facet_grid(Covered.Entity.Type~Type.of.Breach)
+
+
+
+ggplot(data=data,aes(y=Covered.Entity.Type,x=Individuals.Affected))+ geom_boxplot() +theme_classic()
+
+```
+
+## Conclusion
+
+Pearson's correlation test revealed that individuals affected by the incidents and years in which the incidents happened are not significantly correlated with a correlation value of 0.001447914 and  p-value = 0.9407.
+
+The alternative hypothesis shows: true correlation is not equal to 0 with 95 percent confidence interval:
+ -0.03670303  0.03959464.
+

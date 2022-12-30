@@ -1,0 +1,95 @@
+---
+title: "Report"
+author: "Shireen Imran"
+date: "2022-12-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+install.packages("tidyverse") install.packages("gplots") install.packages("ggpubr") install.packages("ggplot2") library(gplots) library(ggpubr) library(ggplot2) library("dplyr")
+
+\## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(dataSubmission)
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+#plot(pressure)
+
+setwd("D:/DataAnalysisRProject/")
+
+data = read.csv("data.csv")
+names(data)
+
+dataSubmission <- data.frame(Date = substring(data$Breach.Submission.Date,0,4), 
+                             Individual = data$Individuals.Affected,
+                             Breached = data$Location.of.Breached.Information,
+                             State = data$State 
+                             )
+
+
+#dataSubmission <- dataSubmission %>% 
+
+#####
+#First, I created a separate dataset with two variables: `Individual` and `State and the standard deviation is 1585918    
+#
+#####
+
+sd(dataSubmission$Individual, na.rm=TRUE)
+sd(dataSubmission$Date, na.rm=TRUE)
+
+hist <- ggplot(dataSubmission, aes(x=Individual))+
+    geom_histogram(color="darkblue", fill="lightblue") +
+    labs(title="Histogram for Individual Affected")
+hist
+
+
+#########
+#  At the same time, both qq-plot and boxplot for `Individual` variable reveal that there are some extreme data #points # at both ends, i.e. 
+#########
+
+
+qqnorm(dataSubmission$Individual)
+qqline(dataSubmission$Individual)
+boxplot(dataSubmission$Individual)
+
+
+
+
+#######
+# The table below presents the means and standard deviations for 
+#
+#######
+mean.dataSubmission <- dataSubmission %>% 
+  group_by(State) %>%
+  summarise(N = n(),
+  Mean = mean(Individual, na.rm = TRUE), 
+  SD = sd(Individual, na.rm = TRUE))
+mean.dataSubmission
+
+
+########
+# # calculating and comparing the means for males and females
+#
+###
+histogram <- dataSubmission %>%
+  ggplot(aes(x= Individual, fill=State)) +
+    geom_histogram( color="#e9ecef", alpha=0.6, position = 'identity') +
+    labs(fill="")
+histogram
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
